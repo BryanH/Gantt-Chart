@@ -49,6 +49,7 @@ d3.gantt = function() {
 		left : 150
     };
 
+    var selector;
     var height = null; // if no height provided, chart height will be calculated with task bar height
     var width = null;  // if no width provided, the chart will expand to screen width
     var mileStoneRadius = 2;
@@ -128,7 +129,7 @@ d3.gantt = function() {
 		Selects root chart "g" node for current gantt chart.
 	*/
     var getChartnode = function() {
-      var chartnode = d3.select("body").selectAll("svg").data([id], function(d){ return d;}).selectAll(".gantt-chart");
+      var chartnode = d3.select(selector || "body").selectAll("svg").data([id], function(d){ return d;}).selectAll(".gantt-chart");
       return chartnode;
     }
 
@@ -239,7 +240,7 @@ d3.gantt = function() {
 
     var initChartCanvas = function (){
 
-		var chartnode = d3.select("body").selectAll("svg").data([id], function(d){ return d;})
+		var chartnode = d3.select(selector || "body").selectAll("svg").data([id], function(d){ return d;})
 			.enter()
 			.append("svg")
 			.attr("class", "chart")
@@ -265,7 +266,7 @@ d3.gantt = function() {
 	*/
 	var isInitialized = function(){
 		// check if svg element exists, if it exists, chart has been initialized
-		var svgSelection = d3.select("body").selectAll("svg").data([id], function(d){ return d;})
+		var svgSelection = d3.select(selector || "body").selectAll("svg").data([id], function(d){ return d;})
 		return !svgSelection.empty();
 	}
 
@@ -369,7 +370,7 @@ d3.gantt = function() {
     } 
 
     var resizeChart = function(){
-      var svgElement = d3.select("body").select("svg").data([id], function(d){ return d;});
+      var svgElement = d3.select(selector || "body").select("svg").data([id], function(d){ return d;});
       svgElement.style("height", (getChartHeight() + margin.top + margin.bottom) + 'px');
     }
 
@@ -403,6 +404,12 @@ d3.gantt = function() {
     /*********************/
     /** GETTER/SETTERS	**/
     /*********************/
+    gantt.selector = function(value) {
+      if (!arguments.length)
+        return selector;
+      selector = value;
+      return gantt;
+    };
 
     gantt.margin = function(value) {
       if (!arguments.length)
@@ -534,7 +541,7 @@ d3.gantt = function() {
 
     function gantt() {
       return gantt;
-    };
+    }
 
 
     return gantt;
@@ -610,7 +617,7 @@ d3.timeAxisRenderer = function(){
   };
 
   function timeAxisRenderer(){
-  };
+  }
 
   return timeAxisRenderer;
 }
@@ -819,7 +826,7 @@ d3.categoryAxisRenderer = function(){
 
   function categoryAxisRenderer(){
 
-  };
+  }
 
   return categoryAxisRenderer;
 }
@@ -949,7 +956,7 @@ d3.overlappingResolver = function(){
 
   function overlappingResolver() {
     return overlappingResolver;
-  };
+  }
 
   return overlappingResolver;
 };
@@ -959,7 +966,7 @@ function hasOwnProperty (obj, prop) {
   var proto = obj.__proto__ || obj.constructor.prototype;
   return (prop in obj) &&
     (!(prop in proto) || proto[prop] !== obj[prop]);
-};
+}
 
 
 d3.taskRenderer = function(){
@@ -1044,7 +1051,7 @@ d3.taskRenderer = function(){
   };
 
   function taskRenderer(){
-  };
+  }
 
   return taskRenderer;
 }
@@ -1106,7 +1113,7 @@ d3.msRenderer = function(){
   };
 
   function msRenderer(){
-  };
+  }
 
   return msRenderer;
 }
@@ -1167,7 +1174,7 @@ d3.datelineRenderer = function(){
   };
 
   function datelineRenderer(){
-  };
+  }
 
   return datelineRenderer;
 }
