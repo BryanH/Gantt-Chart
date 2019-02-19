@@ -29,7 +29,7 @@
 				line.axisY
 				line.tickY
 				g
-					text.tickY-label 
+					text.tickY-label
 			g.grid-group
 				line.gridX
 				line.gridY
@@ -41,7 +41,7 @@ d3.gantt = function() {
     var FIXED_TIME_DOMAIN_MODE = "fixed";
 
     var id = Math.floor((Math.random()*1000000)+1);
-    
+
     var margin = {
 		top : 20,
 		right:  40,
@@ -135,7 +135,7 @@ d3.gantt = function() {
     var assignEvent = function (selection, objectType){
     	var handlers = eventHandlers[objectType];
     	for(h in handlers){
-    		selection.on(h,function(d){ 
+    		selection.on(h,function(d){
     				// if there's a handler for current eventHandlers
     			if(eventHandlers[objectType].hasOwnProperty(h)){
     				eventHandlers[objectType][h](d);
@@ -147,8 +147,8 @@ d3.gantt = function() {
     var initTimeDomain = function(tasks) {
       if (timeDomainMode === FIT_TIME_DOMAIN_MODE) {
         if (tasks === undefined || tasks.length < 1) {
-          timeDomainStart = d3.time.day.offset(new Date(), -3);
-          timeDomainEnd = d3.time.hour.offset(new Date(), +3);
+          timeDomainStart = d3.timeDay.offset(new Date(), -3);
+          timeDomainEnd = d3.timeHour.offset(new Date(), +3);
           return;
         }
 
@@ -221,7 +221,7 @@ d3.gantt = function() {
         .attr("x2", function(d){ return d;})
         .attr("y1", 0)
         .attr("y2", getChartHeight() )
-        .style("stroke", "#ccc");		
+        .style("stroke", "#ccc");
 
 		// draw y axis grid lines
 		var gridWidth = getChartWidth();
@@ -234,7 +234,7 @@ d3.gantt = function() {
 		  .attr("x2", gridWidth)
 		  .attr("y1", function(d){ return d;})
 		  .attr("y2", function(d){ return d;})
-		  .style("stroke", "#ccc");		
+		  .style("stroke", "#ccc");
     }
 
     var initChartCanvas = function (){
@@ -255,7 +255,7 @@ d3.gantt = function() {
     }
 
 	var init = function (){
-		// configure axis and canvas		
+		// configure axis and canvas
 		initTimeDomain(tasks);
 		initChartCanvas();
 	}
@@ -285,16 +285,16 @@ d3.gantt = function() {
 		var taskGSelection = barnode.selectAll("g").data(visibleDL,function(d) { return d.date; });
 
 		var nodes = taskGSelection.enter().append("g")
-		 	.attr("class", "g_dateline") 
+		 	.attr("class", "g_dateline")
 		 	.attr("y", 0)
 		 	.attr("transform", dateLineTransform)
 		 	.call(assignEvent,"dateline");
-		
+
 	    // draw datelines and labels
 	    datelineRenderer.configValue("chartHeight",getChartHeight())
 	    	.eventHandlers(eventHandlers["dateline"]).draw(nodes);
     }
-    
+
     var drawMilestones = function (mileStones){
 
 		var visibleMs = mileStones.filter(isMsVisible);
@@ -308,7 +308,7 @@ d3.gantt = function() {
 		// append new task groups
 		var taskGSelection = barnode.selectAll("g.g_milestone").data(visibleMs,mskeyFunction);
 		var nodes = taskGSelection.enter().append("g")
-			.attr("class", "g_milestone") 
+			.attr("class", "g_milestone")
 			.attr("y", 0)
 		 	.attr("transform", mileStoneTransform)
 
@@ -332,7 +332,7 @@ d3.gantt = function() {
     var calculateBarWidth = function (d){
       var startDate = Math.max(timeDomainStart, d.startDate);
       var endDate = Math.min(timeDomainEnd, d.endDate);
-      var width =  (timeAxisRenderer.position(endDate) - timeAxisRenderer.position(startDate)); 
+      var width =  (timeAxisRenderer.position(endDate) - timeAxisRenderer.position(startDate));
       return width;
     }
 
@@ -348,7 +348,7 @@ d3.gantt = function() {
       // append new task groups
       var taskGSelection = barnode.selectAll("g.g_task").data(visibleTasks,keyFunction);
       var nodes = taskGSelection.enter().append("g")
-      .attr("class","g_task") 
+      .attr("class","g_task")
       .attr("y", 0)
       .attr("transform", taskBarTransform);
 
@@ -366,7 +366,7 @@ d3.gantt = function() {
       var posY = tfrm.substring(pos_comma+1, pos_end);
 
       return {"x":parseInt(posX), "y": parseInt(posY)}
-    } 
+    }
 
     var resizeChart = function(){
       var svgElement = d3.select("body").select("svg").data([id], function(d){ return d;});
@@ -554,9 +554,9 @@ d3.timeAxisRenderer = function(){
   /* PUBLIC METHODS */
 
   /* Calculates categories ranges */
-  timeAxisRenderer.init  = function(){	
-    x = d3.time.scale().domain([ timeDomain[0], timeDomain[1] ]).range([ 0, config.axisLength ]).clamp(true);
-    xAxis = d3.svg.axis().scale(x).orient("bottom").tickSubdivide(true).tickSize(14).tickPadding(3).tickFormat(formatter);
+  timeAxisRenderer.init  = function(){
+    x = d3.scaleTime().domain([ timeDomain[0], timeDomain[1] ]).range([ 0, config.axisLength ]).clamp(true);
+    xAxis = d3.axisBottom(x).tickSubdivide(true).tickSize(14).tickPadding(3).tickFormat(formatter);
   }
 
   timeAxisRenderer.ticks = function(){
@@ -829,7 +829,7 @@ d3.overlappingResolver = function(){
   var categories = [];
   var tasks = [];
   var range = [0,200];
-  /* registers overlaps between tasks. Each item relates task's 
+  /* registers overlaps between tasks. Each item relates task's
      id with an array containg overlapped tasks id*/
   var overlaps = {};
 
@@ -922,7 +922,7 @@ d3.overlappingResolver = function(){
     return overlappingResolver;
   };
 
-  /* Go through category task and check which ones are overlapped and 
+  /* Go through category task and check which ones are overlapped and
      populate overlaps hash with this info */
   var calculateCategoryOverlapping = function(category){
     var searchFunctor = function(d){return (d.category == category);};
@@ -994,7 +994,7 @@ d3.taskRenderer = function(){
     node.append("rect")
       .attr("y", (config.barHeight-config.progressBarHeight)/2)
       .attr("height", config.progressBarHeight )
-      .attr("width", function (d) { 
+      .attr("width", function (d) {
         if (hasOwnProperty(d,"progress")){
           return d.progress * calculateBarWidth(d);
         } else {
